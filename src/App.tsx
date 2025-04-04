@@ -9,9 +9,11 @@ function App() {
 	const [coordinates, setCoordinates] = useState<[number, number]>([
 		37.7749, -122.4194,
 	]);
-	const [zoomLevel, setZoomLevel] = useState(3);
+	const [zoomLevel, setZoomLevel] = useState(0);
 
 	const Map = () => {
+		setZoomLevel(3)
+
 		useEffect(() => {
 			const map = L.map("map", { zoomControl: false }).setView(
 				coordinates,
