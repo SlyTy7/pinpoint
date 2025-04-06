@@ -57,11 +57,20 @@
   min-width: 400px;
 }
 
+.markers .marker {
+  background: #efefef;
+  color: black;
+  border-bottom: solid 1px #ccc;
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 5px;
+}
+
 .card {
   padding: 20px;
 	z-index: 10;
 	position: relative;
   background: #2C3E50;
-  border-radius: 10px;
+  border-radius: 5px;
   margin: 10px;
 }

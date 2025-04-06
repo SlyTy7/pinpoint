@@ -108,6 +108,11 @@ function App() {
 		setMarkers(activeMarkers);
 	};
 
+  const handleHomeClick = () => {
+    setCoordinates([37.7749, -122.4194]);
+    setZoomLevel(10);
+  };
+
 	const handleMarkerClick = () => {
 		setShowMarkers(!showMarkers);
 	};
@@ -134,14 +139,7 @@ function App() {
 				<h1>PinPoint</h1>
 				<div className="button-container">
 					<button onClick={handleMarkerClick}>Markers</button>
-					<button
-						onClick={() => {
-							setCoordinates([37.7749, -122.4194]);
-							setZoomLevel(10);
-						}}
-					>
-						Go Home
-					</button>
+					<button onClick={handleHomeClick}>Home</button>
 				</div>
 			</div>
       {showMarkers && <MarkerCard markers={markers} />}
