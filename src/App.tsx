@@ -11,6 +11,23 @@ type MarkerData = {
 	name: string;
 };
 
+const mapOptions: L.MapOptions = {
+  zoomControl: false,
+};
+
+
+const MarkerCard = ({ markers }: { markers: MarkerData[] }) => (
+  <div className="markers card">
+    {markers.map((marker) => (
+      <div className="marker" data-markerid={marker.id} key={marker.id}>
+        <div className="name">{marker.name}</div>
+        <div className="coords">{marker.coords.join(", ")}</div>
+      </div>
+    ))}
+  </div>
+);
+
+
 function App() {
 	const [coordinates, setCoordinates] = useState<[number, number]>([
 		37.7749, -122.4194,
@@ -24,7 +41,10 @@ function App() {
 
 	// Initialize map
 	useEffect(() => {
-		const map = L.map("map", { zoomControl: false }).setView(coordinates, zoomLevel);
+		const map = L.map("map", mapOptions).setView(
+			coordinates,
+			zoomLevel
+		);
 		mapRef.current = map;
 
 		L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(
@@ -89,13 +109,7 @@ function App() {
 	};
 
 	const handleMarkerClick = () => {
-    setShowMarkers(!showMarkers)
-  };
-
-	const Markers = () => {
-		if (showMarkers) {
-			return <div className="markers card"></div>;
-		}
+		setShowMarkers(!showMarkers);
 	};
 
 	return (
@@ -130,7 +144,7 @@ function App() {
 					</button>
 				</div>
 			</div>
-			<Markers></Markers>
+      {showMarkers && <MarkerCard markers={markers} />}
 			<div id="map" style={{ height: "500px", width: "100%" }}></div>
 		</>
 	);
