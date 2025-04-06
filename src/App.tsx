@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./App.css";
+
+
 
 type MarkerData = {
 	id: number;
@@ -11,22 +11,29 @@ type MarkerData = {
 	name: string;
 };
 
-const mapOptions: L.MapOptions = {
-  zoomControl: false,
-};
-
-
 const MarkerCard = ({ markers }: { markers: MarkerData[] }) => (
-  <div className="markers card">
-    {markers.map((marker) => (
-      <div className="marker" data-markerid={marker.id} key={marker.id}>
-        <div className="name">{marker.name}</div>
-        <div className="coords">{marker.coords.join(", ")}</div>
-      </div>
-    ))}
-  </div>
+	<div className="markers card">
+		{markers.map((marker) => (
+			<div className="marker" data-markerid={marker.id} key={marker.id}>
+				<div className="name">{marker.name}</div>
+				<div className="coords">{marker.coords.join(", ")}</div>
+			</div>
+		))}
+	</div>
 );
 
+type HeaderCardProps = {
+	onHomeClick: () => void;
+	onMarkerClick: () => void;
+};
+
+const HeaderCard = ({ onHomeClick, onMarkerClick }: HeaderCardProps) => (
+	<div className="header card">
+		<button onClick={onHomeClick}>Home</button>
+		<h1>PinPoint</h1>
+		<button onClick={onMarkerClick}>Markers</button>
+	</div>
+);
 
 function App() {
 	const [coordinates, setCoordinates] = useState<[number, number]>([
@@ -36,15 +43,14 @@ function App() {
 	const [markers, setMarkers] = useState<MarkerData[]>([]);
 	const [showMarkers, setShowMarkers] = useState<boolean>(false);
 
+  const mapOptions: L.MapOptions = { zoomControl: false,};
+
 	const mapRef = useRef<L.Map | null>(null);
 	const markerLayerRef = useRef<L.LayerGroup | null>(null);
 
 	// Initialize map
 	useEffect(() => {
-		const map = L.map("map", mapOptions).setView(
-			coordinates,
-			zoomLevel
-		);
+		const map = L.map("map", mapOptions).setView(coordinates, zoomLevel);
 		mapRef.current = map;
 
 		L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(
@@ -108,10 +114,10 @@ function App() {
 		setMarkers(activeMarkers);
 	};
 
-  const handleHomeClick = () => {
-    setCoordinates([37.7749, -122.4194]);
-    setZoomLevel(10);
-  };
+	const handleHomeClick = () => {
+		setCoordinates([37.7749, -122.4194]);
+		setZoomLevel(10);
+	};
 
 	const handleMarkerClick = () => {
 		setShowMarkers(!showMarkers);
@@ -119,30 +125,11 @@ function App() {
 
 	return (
 		<>
-			<div className="header card">
-				<div className="logo-container">
-					<a href="https://vite.dev" target="_blank" rel="noreferrer">
-						<img src={viteLogo} className="logo" alt="Vite logo" />
-					</a>
-					<a
-						href="https://react.dev"
-						target="_blank"
-						rel="noreferrer"
-					>
-						<img
-							src={reactLogo}
-							className="logo react"
-							alt="React logo"
-						/>
-					</a>
-				</div>
-				<h1>PinPoint</h1>
-				<div className="button-container">
-					<button onClick={handleMarkerClick}>Markers</button>
-					<button onClick={handleHomeClick}>Home</button>
-				</div>
-			</div>
-      {showMarkers && <MarkerCard markers={markers} />}
+      <HeaderCard
+        onHomeClick={handleHomeClick}
+        onMarkerClick={handleMarkerClick}
+      />
+			{showMarkers && <MarkerCard markers={markers} />}
 			<div id="map" style={{ height: "500px", width: "100%" }}></div>
 		</>
 	);
