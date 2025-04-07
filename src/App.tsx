@@ -50,7 +50,7 @@ function App() {
 	const [coordinates, setCoordinates] = useState<[number, number]>([
 		37.7749, -122.4194,
 	]);
-	const [zoomLevel, setZoomLevel] = useState(8);
+	const [zoomLevel, setZoomLevel] = useState(7);
 	const [markers, setMarkers] = useState<MarkerData[]>([]);
 	const [showMarkers, setShowMarkers] = useState<boolean>(false);
 
@@ -131,7 +131,7 @@ function App() {
 
 	const handlePanToMarker = (coords: [number, number]) => {
 		setCoordinates(coords);
-		setZoomLevel(12); // zoom in when panning
+		setZoomLevel(10); // zoom in when panning
 		setShowMarkers(false); // close markers meny after clicking
 	};
 
