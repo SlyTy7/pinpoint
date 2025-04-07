@@ -3,8 +3,6 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./App.css";
 
-
-
 type MarkerData = {
 	id: number;
 	coords: [number, number];
@@ -13,6 +11,10 @@ type MarkerData = {
 
 const MarkerCard = ({ markers }: { markers: MarkerData[] }) => (
 	<div className="markers card">
+			<div className="marker header-marker">
+				<div className="name">Name</div>
+				<div className="coords">Coordinates</div>
+			</div>
 		{markers.map((marker) => (
 			<div className="marker" data-markerid={marker.id} key={marker.id}>
 				<div className="name">{marker.name}</div>
@@ -43,7 +45,7 @@ function App() {
 	const [markers, setMarkers] = useState<MarkerData[]>([]);
 	const [showMarkers, setShowMarkers] = useState<boolean>(false);
 
-  const mapOptions: L.MapOptions = { zoomControl: false,};
+	const mapOptions: L.MapOptions = { zoomControl: false };
 
 	const mapRef = useRef<L.Map | null>(null);
 	const markerLayerRef = useRef<L.LayerGroup | null>(null);
@@ -125,10 +127,10 @@ function App() {
 
 	return (
 		<>
-      <HeaderCard
-        onHomeClick={handleHomeClick}
-        onMarkerClick={handleMarkerClick}
-      />
+			<HeaderCard
+				onHomeClick={handleHomeClick}
+				onMarkerClick={handleMarkerClick}
+			/>
 			{showMarkers && <MarkerCard markers={markers} />}
 			<div id="map" style={{ height: "500px", width: "100%" }}></div>
 		</>

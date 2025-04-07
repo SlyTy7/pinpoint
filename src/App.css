@@ -4,6 +4,8 @@
   margin: 0 auto;
   padding: 5px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
 }
 .logo {
   height: 1.5em;
@@ -63,7 +65,20 @@
   border-bottom: solid 1px #ccc;
   display: flex;
   justify-content: space-between;
-  padding: 3px 5px;
+  padding: 5px 10px;
+}
+
+.markers .marker:last-child {
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.markers .marker.header-marker {
+  background: #ccc;
+  font-weight: bold;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  font-size: 20px;
 }
 
 .card {
