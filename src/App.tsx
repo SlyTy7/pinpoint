@@ -35,14 +35,12 @@ const MarkerCard = ({
 );
 
 type HeaderCardProps = {
-	onHomeClick: () => void;
 	onMarkerClick: () => void;
 };
 
 
-const HeaderCard = ({ onHomeClick, onMarkerClick }: HeaderCardProps) => (
+const HeaderCard = ({ onMarkerClick }: HeaderCardProps) => (
 	<div className="header card">
-		<button onClick={onHomeClick}>Home</button>
 		<h1>PinPoint</h1>
 		<button onClick={onMarkerClick}>Markers</button>
 	</div>
@@ -127,11 +125,6 @@ function App() {
 		setMarkers(activeMarkers);
 	};
 
-	const handleHomeClick = () => {
-		setCoordinates([37.7749, -122.4194]);
-		setZoomLevel(10);
-	};
-
 	const handleMarkerClick = () => {
 		setShowMarkers(!showMarkers);
 	};
@@ -144,10 +137,7 @@ function App() {
 
 	return (
 		<>
-			<HeaderCard
-				onHomeClick={handleHomeClick}
-				onMarkerClick={handleMarkerClick}
-			/>
+			<HeaderCard onMarkerClick={handleMarkerClick} />
 			{showMarkers && <MarkerCard markers={markers} onPanToMarker={handlePanToMarker} />}
 			<div id="map" style={{ height: "500px", width: "100%" }}></div>
 		</>
