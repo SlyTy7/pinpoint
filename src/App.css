@@ -1,91 +1,112 @@
 #root {
-  max-width: 1280px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 5px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
+	max-width: 1280px;
+	width: 100%;
+	margin: 0 auto;
+	padding: 5px;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
 }
 .logo {
-  height: 1.5em;
-  padding: .5em;
-  will-change: filter;
-  transition: filter 300ms;
+	height: 1.5em;
+	padding: 0.5em;
+	will-change: filter;
+	transition: filter 300ms;
 }
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+	filter: drop-shadow(0 0 2em #646cffaa);
 }
 .logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+	filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
 @keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+	a:nth-of-type(2) .logo {
+		animation: logo-spin infinite 20s linear;
+	}
 }
 
 #map {
 	min-height: 100vh;
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  top: 0;
-  z-index: 0;
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	top: 0;
+	z-index: 0;
 }
 
 .header {
 	z-index: 10;
 	position: relative;
-  background: #2C3E50;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+	background: #2c3e50;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
 .markers {
-  justify-self: flex-end;
-  min-width: 400px;
+	justify-self: flex-end;
+	min-width: 400px;
 }
 
 .markers .marker {
-  background: #efefef;
-  color: black;
-  border-bottom: solid 1px #ccc;
-  display: flex;
-  justify-content: space-between;
-  padding: 5px 10px;
+	background: #efefef;
+	color: black;
+	border-bottom: solid 1px #ccc;
+	display: flex;
+	justify-content: space-between;
+	padding: 5px 10px;
 }
 
 .markers .marker:last-child {
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
+
+.markers .marker > .name,
+.markers .marker > .coords,
+.markers .marker > .actions {
+	flex: 1;
+}
+
+.markers .marker > .name {
+	text-align: left;
+}
+
+.markers .marker > .coords {
+}
+
+.markers .marker > .actions {
+	text-align: right;
+}
+
+.markers .marker > .actions button {
+	margin-right: 0;
 }
 
 .markers .marker.header-marker {
-  background: #ccc;
-  font-weight: bold;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-  font-size: 20px;
+	background: #ccc;
+	font-weight: bold;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	font-size: 20px;
 }
 
 .card {
-  padding: 20px;
+	padding: 20px;
 	z-index: 10;
 	position: relative;
-  background: #2C3E50;
-  border-radius: 5px;
-  margin: 10px;
+	background: #2c3e50;
+	border-radius: 5px;
+	margin: 10px;
 }

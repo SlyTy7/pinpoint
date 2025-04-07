@@ -9,16 +9,26 @@ type MarkerData = {
 	name: string;
 };
 
-const MarkerCard = ({ markers }: { markers: MarkerData[] }) => (
+const MarkerCard = ({
+	markers,
+	onPanToMarker,
+}: {
+	markers: MarkerData[];
+	onPanToMarker: (coords: [number, number]) => void;
+}) => (
 	<div className="markers card">
 			<div className="marker header-marker">
 				<div className="name">Name</div>
 				<div className="coords">Coordinates</div>
+				<div className="actions">Actions</div>
 			</div>
 		{markers.map((marker) => (
 			<div className="marker" data-markerid={marker.id} key={marker.id}>
 				<div className="name">{marker.name}</div>
 				<div className="coords">{marker.coords.join(", ")}</div>
+				<div className="actions">
+					<button onClick={() => onPanToMarker(marker.coords)}>Go To</button>
+				</div>
 			</div>
 		))}
 	</div>
@@ -28,6 +38,7 @@ type HeaderCardProps = {
 	onHomeClick: () => void;
 	onMarkerClick: () => void;
 };
+
 
 const HeaderCard = ({ onHomeClick, onMarkerClick }: HeaderCardProps) => (
 	<div className="header card">
@@ -41,7 +52,7 @@ function App() {
 	const [coordinates, setCoordinates] = useState<[number, number]>([
 		37.7749, -122.4194,
 	]);
-	const [zoomLevel, setZoomLevel] = useState(10);
+	const [zoomLevel, setZoomLevel] = useState(8);
 	const [markers, setMarkers] = useState<MarkerData[]>([]);
 	const [showMarkers, setShowMarkers] = useState<boolean>(false);
 
@@ -94,7 +105,7 @@ function App() {
 			{
 				id: 0,
 				coords: [37.7749, -122.4194],
-				name: "Home",
+				name: "San Francisco",
 			},
 			{
 				id: 1,
@@ -125,13 +136,19 @@ function App() {
 		setShowMarkers(!showMarkers);
 	};
 
+	const handlePanToMarker = (coords: [number, number]) => {
+		setCoordinates(coords);
+		setZoomLevel(12); // zoom in when panning
+		setShowMarkers(false); // close markers meny after clicking
+	};
+
 	return (
 		<>
 			<HeaderCard
 				onHomeClick={handleHomeClick}
 				onMarkerClick={handleMarkerClick}
 			/>
-			{showMarkers && <MarkerCard markers={markers} />}
+			{showMarkers && <MarkerCard markers={markers} onPanToMarker={handlePanToMarker} />}
 			<div id="map" style={{ height: "500px", width: "100%" }}></div>
 		</>
 	);
