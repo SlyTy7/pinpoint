@@ -65,18 +65,22 @@
 	border-bottom: solid 1px #ccc;
 	display: flex;
 	justify-content: space-between;
-  align-items: center;
+	align-items: center;
 	padding: 5px 10px;
+	cursor: pointer;
 }
 
-.markers .marker:last-child {
+.markers .marker:hover {
+	background: #aaaaaa
+}
+
+.markers .marker:last-of-type {
 	border-bottom-left-radius: 5px;
 	border-bottom-right-radius: 5px;
 }
 
 .markers .marker > .name,
-.markers .marker > .coords,
-.markers .marker > .actions {
+.markers .marker > .coords {
 	flex: 1;
 }
 
@@ -85,15 +89,7 @@
 }
 
 .markers .marker > .coords {
-}
-
-.markers .marker > .actions {
 	text-align: right;
-}
-
-.markers .marker > .actions button {
-	margin-right: 0;
-  padding: 0.5em 0.9em;
 }
 
 .markers .marker.header-marker {
@@ -102,6 +98,10 @@
 	border-top-left-radius: 5px;
 	border-top-right-radius: 5px;
 	font-size: 20px;
+}
+
+.markers .actions button {
+	margin-top: 10px;
 }
 
 .card {

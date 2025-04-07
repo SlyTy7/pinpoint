@@ -11,33 +11,44 @@ type MarkerData = {
 
 const MarkerCard = ({
 	markers,
+	userLocation,
 	onPanToMarker,
+	createNewMarker,
 }: {
 	markers: MarkerData[];
+	userLocation: [number, number];
 	onPanToMarker: (coords: [number, number]) => void;
+	createNewMarker: (coords: [number, number]) => void;
 }) => (
 	<div className="markers card">
+		<div className="marker-list">
 			<div className="marker header-marker">
 				<div className="name">Name</div>
 				<div className="coords">Coordinates</div>
-				<div className="actions">Actions</div>
 			</div>
-		{markers.map((marker) => (
-			<div className="marker" data-markerid={marker.id} key={marker.id}>
-				<div className="name">{marker.name}</div>
-				<div className="coords">{marker.coords.join(", ")}</div>
-				<div className="actions">
-					<button onClick={() => onPanToMarker(marker.coords)}>Go To</button>
+			{markers.map((marker) => (
+				<div
+					className="marker"
+					data-markerid={marker.id}
+					key={marker.id}
+					onClick={() => onPanToMarker(marker.coords)}
+				>
+					<div className="name">{marker.name}</div>
+					<div className="coords">{marker.coords.join(", ")}</div>
 				</div>
-			</div>
-		))}
+			))}
+		</div>
+		<div className="actions">
+			<button onClick={() => createNewMarker(userLocation)}>
+				Add Current Location
+			</button>
+		</div>
 	</div>
 );
 
 type HeaderCardProps = {
 	onMarkerClick: () => void;
 };
-
 
 const HeaderCard = ({ onMarkerClick }: HeaderCardProps) => (
 	<div className="header card">
@@ -50,6 +61,7 @@ function App() {
 	const [coordinates, setCoordinates] = useState<[number, number]>([
 		37.7749, -122.4194,
 	]);
+	const [userLocation, setUserLocation] = useState<[number, number]>([0, 0]);
 	const [zoomLevel, setZoomLevel] = useState(7);
 	const [markers, setMarkers] = useState<MarkerData[]>([]);
 	const [showMarkers, setShowMarkers] = useState<boolean>(false);
@@ -71,6 +83,15 @@ function App() {
 		markerLayerRef.current = L.layerGroup().addTo(map);
 
 		getMarkers();
+
+		navigator.geolocation.getCurrentPosition((position) => {
+			const { latitude, longitude } = position.coords;
+			// Round to 4 decimal places
+			const roundedLat = parseFloat(latitude.toFixed(4));
+			const roundedLng = parseFloat(longitude.toFixed(4));
+
+			setUserLocation([roundedLat, roundedLng]);
+		});
 
 		return () => {
 			map.remove();
@@ -130,15 +151,31 @@ function App() {
 	};
 
 	const handlePanToMarker = (coords: [number, number]) => {
-		setCoordinates(coords);
+		setCoordinates(coords); // pan view to coords
 		setZoomLevel(10); // zoom in when panning
 		setShowMarkers(false); // close markers meny after clicking
+	};
+
+	const createNewMarker = (coords: [number, number]) => {
+		const newMarker: MarkerData = {
+			id: markers.length,
+			coords,
+			name: `New Marker ${markers.length + 1}`,
+		};
+		setMarkers((prev) => [...prev, newMarker]);
 	};
 
 	return (
 		<>
 			<HeaderCard onMarkerClick={handleMarkerClick} />
-			{showMarkers && <MarkerCard markers={markers} onPanToMarker={handlePanToMarker} />}
+			{showMarkers && (
+				<MarkerCard
+					markers={markers}
+					userLocation={userLocation}
+					onPanToMarker={handlePanToMarker}
+					createNewMarker={createNewMarker}
+				/>
+			)}
 			<div id="map" style={{ height: "500px", width: "100%" }}></div>
 		</>
 	);
