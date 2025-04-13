@@ -10,11 +10,13 @@ type MarkerData = {
 };
 
 const MarkerCard = ({
+	loading,
 	markers,
 	userLocation,
 	onPanToMarker,
 	createNewMarker,
 }: {
+	loading: boolean;
 	markers: MarkerData[];
 	userLocation: [number, number];
 	onPanToMarker: (coords: [number, number]) => void;
@@ -39,7 +41,7 @@ const MarkerCard = ({
 			))}
 		</div>
 		<div className="actions">
-			<button onClick={() => createNewMarker(userLocation)}>
+			<button disabled={loading} onClick={() => createNewMarker(userLocation)}>
 				Add Current Location
 			</button>
 		</div>
@@ -71,6 +73,7 @@ function App() {
 		37.7749, -122.4194,
 	]);
 	const [userLocation, setUserLocation] = useState<[number, number]>([0, 0]);
+	const [loading, setLoading] = useState<boolean>(false);
 	const [zoomLevel, setZoomLevel] = useState(7);
 	const [markers, setMarkers] = useState<MarkerData[]>([]);
 	const [showMarkers, setShowMarkers] = useState<boolean>(false);
@@ -166,6 +169,7 @@ function App() {
 	};
 
 	const createNewMarker = async (coords: [number, number]) => {
+		setLoading(true);
 		const cityName = await getCityFromCoords(coords[0], coords[1]);
 		const newMarker: MarkerData = {
 			id: markers.length,
@@ -173,7 +177,11 @@ function App() {
 			name: cityName,
 		};
 
-		setMarkers((prev) => [...prev, newMarker]);
+		// adds 2 second delay
+		setTimeout(() => {
+			setMarkers((prev) => [...prev, newMarker]);
+			setLoading(false);
+		}, 2000)
 	};
 
 	return (
@@ -181,6 +189,7 @@ function App() {
 			<HeaderCard onMarkerClick={handleMarkerClick} />
 			{showMarkers && (
 				<MarkerCard
+					loading={loading}
 					markers={markers}
 					userLocation={userLocation}
 					onPanToMarker={handlePanToMarker}
