@@ -79,7 +79,7 @@ function App() {
 		setLoading(true);
 		const cityName = await getCityFromCoords(coords[0], coords[1]);
 		const newMarker: MarkerData = {
-			id: markers.length,
+			id: markers.length + 1,
 			coords,
 			name: cityName,
 		};
