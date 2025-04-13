@@ -1,4 +1,14 @@
 import { useEffect, useRef, useState } from "react";
+import {
+	Card,
+	CardHeader,
+	CardContent,
+	Typography,
+	Button,
+	Stack,
+	Divider,
+	Box,
+} from "@mui/material";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./App.css";
@@ -22,30 +32,55 @@ const MarkerCard = ({
 	onPanToMarker: (coords: [number, number]) => void;
 	createNewMarker: (coords: [number, number]) => void;
 }) => (
-	<div className="markers card">
-		<div className="marker-list">
-			<div className="marker header-marker">
-				<div className="name">Name</div>
-				<div className="coords">Coordinates</div>
-			</div>
-			{markers.map((marker) => (
-				<div
-					className="marker"
-					data-markerid={marker.id}
-					key={marker.id}
-					onClick={() => onPanToMarker(marker.coords)}
+	<Card
+		sx={{
+			maxWidth: 400,
+			position: "absolute",
+			top: 80,
+			left: 20,
+			zIndex: 1000,
+		}}
+	>
+		<CardHeader title="Markers" />
+		<CardContent>
+			<Box>
+				<Stack
+					direction="row"
+					justifyContent="space-between"
+					sx={{ mb: 1 }}
 				>
-					<div className="name">{marker.name}</div>
-					<div className="coords">{marker.coords.join(", ")}</div>
-				</div>
-			))}
-		</div>
-		<div className="actions">
-			<button disabled={loading} onClick={() => createNewMarker(userLocation)}>
+					<Typography variant="subtitle2">Name</Typography>
+					<Typography variant="subtitle2">Coordinates</Typography>
+				</Stack>
+				<Divider />
+				{markers.map((marker) => (
+					<Box
+						key={marker.id}
+						sx={{
+							display: "flex",
+							justifyContent: "space-between",
+							padding: 1,
+							cursor: "pointer",
+							"&:hover": { backgroundColor: "#f5f5f5" },
+						}}
+						onClick={() => onPanToMarker(marker.coords)}
+					>
+						<Typography>{marker.name}</Typography>
+						<Typography>{marker.coords.join(", ")}</Typography>
+					</Box>
+				))}
+			</Box>
+			<Divider sx={{ my: 2 }} />
+			<Button
+				fullWidth
+				variant="contained"
+				disabled={loading}
+				onClick={() => createNewMarker(userLocation)}
+			>
 				Add Current Location
-			</button>
-		</div>
-	</div>
+			</Button>
+		</CardContent>
+	</Card>
 );
 
 type HeaderCardProps = {
@@ -53,10 +88,22 @@ type HeaderCardProps = {
 };
 
 const HeaderCard = ({ onMarkerClick }: HeaderCardProps) => (
-	<div className="header card">
-		<h1>PinPoint</h1>
-		<button onClick={onMarkerClick}>Markers</button>
-	</div>
+	<Card sx={{ margin: 2, zIndex: 100, }}>
+		<CardContent
+			sx={{
+				display: "flex",
+				justifyContent: "space-between",
+				alignItems: "center",
+			}}
+		>
+			<Typography variant="h5" component="div">
+				PinPoint
+			</Typography>
+			<Button variant="outlined" onClick={onMarkerClick}>
+				Markers
+			</Button>
+		</CardContent>
+	</Card>
 );
 
 const getCityFromCoords = async (lat: number, lng: number) => {
@@ -181,7 +228,7 @@ function App() {
 		setTimeout(() => {
 			setMarkers((prev) => [...prev, newMarker]);
 			setLoading(false);
-		}, 2000)
+		}, 2000);
 	};
 
 	return (
