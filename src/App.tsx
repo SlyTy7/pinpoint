@@ -57,6 +57,15 @@ const HeaderCard = ({ onMarkerClick }: HeaderCardProps) => (
 	</div>
 );
 
+const getCityFromCoords = async (lat: number, lng: number) => {
+	const apiKey = import.meta.env.VITE_OPENCAGE_API_KEY;
+	const res = await fetch(
+		`https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=${apiKey}`
+	);
+	const data = await res.json();
+	return data.results[0]?.components?.city;
+};
+
 function App() {
 	const [coordinates, setCoordinates] = useState<[number, number]>([
 		37.7749, -122.4194,
@@ -156,12 +165,14 @@ function App() {
 		setShowMarkers(false); // close markers meny after clicking
 	};
 
-	const createNewMarker = (coords: [number, number]) => {
+	const createNewMarker = async (coords: [number, number]) => {
+		const cityName = await getCityFromCoords(coords[0], coords[1]);
 		const newMarker: MarkerData = {
 			id: markers.length,
 			coords,
-			name: `New Marker ${markers.length + 1}`,
+			name: cityName,
 		};
+
 		setMarkers((prev) => [...prev, newMarker]);
 	};
 
