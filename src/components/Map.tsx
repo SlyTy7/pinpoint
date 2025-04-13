@@ -48,7 +48,7 @@ const MapView = ({ center, zoom, markers }: MapViewProps) => {
     });
   }, [markers]);
 
-  return <div id="map" style={{ height: "500px", width: "100%" }} />;
+  return <div id="map" />;
 };
 
 export default MapView;

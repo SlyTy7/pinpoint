@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Map from "./components/Map";
 import MarkerCard from "./components/MarkerCard";
-import HeaderCard from "./components/HeaderCard";
+import Header from "./components/Header";
 import { getCityFromCoords } from "./utils/geo";
 import "./styles/App.css";
 
@@ -92,7 +92,7 @@ function App() {
 
 	return (
 		<>
-			<HeaderCard onMarkerClick={() => setShowMarkers(!showMarkers)} />
+			<Header onMarkerClick={() => setShowMarkers(!showMarkers)} />
 			{showMarkers && (
 				<MarkerCard
 					loading={loading}
@@ -103,6 +103,7 @@ function App() {
 				/>
 			)}
 			<Map center={coordinates} zoom={zoomLevel} markers={markers} />
+
 		</>
 	);
 }
