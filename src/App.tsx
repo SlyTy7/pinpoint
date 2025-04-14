@@ -49,6 +49,10 @@ function App() {
 		});
 	}, []);
 
+	const handleDeleteMarkers = (ids: number[]) => {
+		setMarkers((prev) => prev.filter((marker) => !ids.includes(marker.id)));
+	};
+
 	const handlePanToMarker = (coords: [number, number]) => {
 		setCoordinates(coords);
 		setZoomLevel(10);
@@ -80,10 +84,10 @@ function App() {
 					userLocation={userLocation}
 					onPanToMarker={handlePanToMarker}
 					createNewMarker={createNewMarker}
+					onDeleteMarkers={handleDeleteMarkers}
 				/>
 			)}
 			<Map center={coordinates} zoom={zoomLevel} markers={markers} />
-
 		</>
 	);
 }
