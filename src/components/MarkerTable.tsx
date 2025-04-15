@@ -1,4 +1,9 @@
-import React from "react";
+import {
+	useState,
+	useMemo,
+	MouseEvent,
+	ChangeEvent,
+} from "react";
 import {
 	alpha,
 	Box,
@@ -69,13 +74,13 @@ function getComparator<Key extends keyof any>(
 }
 
 function EnhancedTableHead(props: {
-	onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
+	onSelectAllClick: (event: ChangeEvent<HTMLInputElement>) => void;
 	order: Order;
 	orderBy: string;
 	numSelected: number;
 	rowCount: number;
 	onRequestSort: (
-		event: React.MouseEvent<unknown>,
+		event: MouseEvent<unknown>,
 		property: keyof MarkerData | "coords"
 	) => void;
 }) {
@@ -89,7 +94,7 @@ function EnhancedTableHead(props: {
 	} = props;
 	const createSortHandler =
 		(property: keyof MarkerData | "coords") =>
-		(event: React.MouseEvent<unknown>) =>
+		(event: MouseEvent<unknown>) =>
 			onRequestSort(event, property);
 
 	return (
@@ -98,9 +103,7 @@ function EnhancedTableHead(props: {
 				<TableCell padding="checkbox">
 					<Checkbox
 						color="primary"
-						indeterminate={
-							numSelected > 0 && numSelected < rowCount
-						}
+						indeterminate={numSelected > 0 && numSelected < rowCount}
 						checked={rowCount > 0 && numSelected === rowCount}
 						onChange={onSelectAllClick}
 						inputProps={{ "aria-label": "select all markers" }}
@@ -120,9 +123,7 @@ function EnhancedTableHead(props: {
 							{headCell.label}
 							{orderBy === headCell.id ? (
 								<Box component="span" sx={visuallyHidden}>
-									{order === "desc"
-										? "sorted descending"
-										: "sorted ascending"}
+									{order === "desc" ? "sorted descending" : "sorted ascending"}
 								</Box>
 							) : null}
 						</TableSortLabel>
@@ -150,19 +151,11 @@ function EnhancedTableToolbar(props: {
 			}}
 		>
 			{numSelected > 0 ? (
-				<Typography
-					sx={{ flex: "1 1 100%" }}
-					color="inherit"
-					variant="subtitle1"
-				>
+				<Typography sx={{ flex: "1 1 100%" }} color="inherit" variant="subtitle1">
 					{numSelected} selected
 				</Typography>
 			) : (
-				<Typography
-					sx={{ flex: "1 1 100%" }}
-					variant="h6"
-					id="tableTitle"
-				>
+				<Typography sx={{ flex: "1 1 100%" }} variant="h6" id="tableTitle">
 					Your Markers
 				</Typography>
 			)}
@@ -186,16 +179,14 @@ export default function MarkerTable({
 	onDeleteMarkers,
 	createNewMarker,
 }: MarkerTableProps) {
-	const [order, setOrder] = React.useState<Order>("asc");
-	const [orderBy, setOrderBy] = React.useState<keyof MarkerData | "coords">(
-		"id"
-	);
-	const [selected, setSelected] = React.useState<number[]>([]);
-	const [page, setPage] = React.useState(0);
-	const [rowsPerPage, setRowsPerPage] = React.useState(5);
+	const [order, setOrder] = useState<Order>("asc");
+	const [orderBy, setOrderBy] = useState<keyof MarkerData | "coords">("id");
+	const [selected, setSelected] = useState<number[]>([]);
+	const [page, setPage] = useState(0);
+	const [rowsPerPage, setRowsPerPage] = useState(5);
 
 	const handleRequestSort = (
-		event: React.MouseEvent<unknown>,
+		_event: MouseEvent<unknown>,
 		property: keyof MarkerData | "coords"
 	) => {
 		const isAsc = orderBy === property && order === "asc";
@@ -203,9 +194,7 @@ export default function MarkerTable({
 		setOrderBy(property);
 	};
 
-	const handleSelectAllClick = (
-		event: React.ChangeEvent<HTMLInputElement>
-	) => {
+	const handleSelectAllClick = (event: ChangeEvent<HTMLInputElement>) => {
 		if (event.target.checked) {
 			const newSelected = markers.map((n) => n.id);
 			setSelected(newSelected);
@@ -215,7 +204,7 @@ export default function MarkerTable({
 	};
 
 	const handleClick = (
-		event: React.MouseEvent<unknown>,
+		_event: MouseEvent<unknown>,
 		id: number,
 		coords: [number, number]
 	) => {
@@ -237,18 +226,16 @@ export default function MarkerTable({
 		setSelected([]);
 	};
 
-	const handleChangePage = (event: unknown, newPage: number) => {
+	const handleChangePage = (_event: unknown, newPage: number) => {
 		setPage(newPage);
 	};
 
-	const handleChangeRowsPerPage = (
-		event: React.ChangeEvent<HTMLInputElement>
-	) => {
+	const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
 		setRowsPerPage(parseInt(event.target.value, 10));
 		setPage(0);
 	};
 
-	const sortedMarkers = React.useMemo(
+	const sortedMarkers = useMemo(
 		() => markers.slice().sort(getComparator(order, orderBy)),
 		[markers, order, orderBy]
 	);
@@ -294,11 +281,7 @@ export default function MarkerTable({
 									<TableRow
 										hover
 										onClick={(event) =>
-											handleClick(
-												event,
-												row.id,
-												row.coords
-											)
+											handleClick(event, row.id, row.coords)
 										}
 										role="checkbox"
 										aria-checked={isItemSelected}
@@ -308,13 +291,10 @@ export default function MarkerTable({
 										sx={{ cursor: "pointer" }}
 									>
 										<TableCell padding="checkbox">
-											<Checkbox
-												color="primary"
-												checked={isItemSelected}
-											/>
+											<Checkbox color="primary" checked={isItemSelected} />
 										</TableCell>
 										<TableCell>{row.name}</TableCell>
-										<TableCell sx={{ textAlign: "right"}}>
+										<TableCell sx={{ textAlign: "right" }}>
 											{row.coords.join(", ")}
 										</TableCell>
 									</TableRow>
@@ -323,9 +303,7 @@ export default function MarkerTable({
 							{visibleRows.length < rowsPerPage && (
 								<TableRow
 									style={{
-										height:
-											53 *
-											(rowsPerPage - visibleRows.length),
+										height: 53 * (rowsPerPage - visibleRows.length),
 									}}
 								>
 									<TableCell colSpan={4} />
