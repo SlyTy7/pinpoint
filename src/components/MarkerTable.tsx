@@ -51,6 +51,9 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T | "coords") {
 		const bCoord = (b as any).coords.join(", ");
 		return bCoord.localeCompare(aCoord);
 	}
+	if (orderBy === "id") {
+		return (a[orderBy] as number) - (b[orderBy] as number);
+	}
 	return (b[orderBy] as any)
 		.toString()
 		.localeCompare((a[orderBy] as any).toString());
