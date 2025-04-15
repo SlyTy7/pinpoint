@@ -4,7 +4,9 @@ import {
 	Box,
 	Checkbox,
 	IconButton,
+	Button,
 	Paper,
+	Grid,
 	Table,
 	TableBody,
 	TableCell,
@@ -25,8 +27,11 @@ type Order = "asc" | "desc";
 
 type MarkerTableProps = {
 	markers: MarkerData[];
+	loading: boolean;
+	userLocation: [number, number];
 	onPanToMarker: (coords: [number, number]) => void;
 	onDeleteMarkers: (ids: number[]) => void;
+	createNewMarker: (coords: [number, number]) => void;
 };
 
 type HeadCell = {
@@ -36,7 +41,6 @@ type HeadCell = {
 };
 
 const headCells: readonly HeadCell[] = [
-	{ id: "id", numeric: false, label: "ID" },
 	{ id: "name", numeric: false, label: "City" },
 	{ id: "coords", numeric: false, label: "Coordinates" },
 ];
@@ -99,9 +103,10 @@ function EnhancedTableHead(props: {
 						inputProps={{ "aria-label": "select all markers" }}
 					/>
 				</TableCell>
-				{headCells.map((headCell) => (
+				{headCells.map((headCell, index) => (
 					<TableCell
 						key={headCell.id}
+						align={index === headCells.length - 1 ? "right" : "left"}
 						sortDirection={orderBy === headCell.id ? order : false}
 					>
 						<TableSortLabel
@@ -172,8 +177,11 @@ function EnhancedTableToolbar(props: {
 
 export default function MarkerTable({
 	markers,
+	loading,
+	userLocation,
 	onPanToMarker,
 	onDeleteMarkers,
+	createNewMarker,
 }: MarkerTableProps) {
 	const [order, setOrder] = React.useState<Order>("asc");
 	const [orderBy, setOrderBy] = React.useState<keyof MarkerData | "coords">(
@@ -250,13 +258,23 @@ export default function MarkerTable({
 	const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
 	return (
-		<Box sx={{ width: "100%" }}>
-			<Paper sx={{ width: "100%", mb: 2 }}>
+		<Box
+			sx={{
+				maxWidth: "600px",
+				width: "100%",
+				position: "absolute",
+				top: 64,
+				right: 0,
+				m: 2,
+				zIndex: 100,
+			}}
+		>
+			<Paper sx={{ width: "100%", p: 2 }}>
 				<EnhancedTableToolbar
 					numSelected={selected.length}
 					onDelete={handleDelete}
 				/>
-				<TableContainer>
+				<TableContainer sx={{ pb: 4 }}>
 					<Table aria-labelledby="tableTitle" size="medium">
 						<EnhancedTableHead
 							numSelected={selected.length}
@@ -292,9 +310,8 @@ export default function MarkerTable({
 												checked={isItemSelected}
 											/>
 										</TableCell>
-										<TableCell>{row.id}</TableCell>
 										<TableCell>{row.name}</TableCell>
-										<TableCell>
+										<TableCell sx={{ textAlign: "right"}}>
 											{row.coords.join(", ")}
 										</TableCell>
 									</TableRow>
@@ -314,15 +331,35 @@ export default function MarkerTable({
 						</TableBody>
 					</Table>
 				</TableContainer>
-				<TablePagination
-					rowsPerPageOptions={[5, 10]}
-					component="div"
-					count={markers.length}
-					rowsPerPage={rowsPerPage}
-					page={page}
-					onPageChange={handleChangePage}
-					onRowsPerPageChange={handleChangeRowsPerPage}
-				/>
+				<Grid
+					container
+					spacing={0}
+					sx={{
+						justifyContent: "center",
+						alignItems: "center",
+					}}
+				>
+					<Grid size={6}>
+						<Button
+							variant="contained"
+							disabled={loading}
+							onClick={() => createNewMarker(userLocation)}
+						>
+							Add Current Location
+						</Button>
+					</Grid>
+					<Grid size={6}>
+						<TablePagination
+							rowsPerPageOptions={[5]}
+							component="div"
+							count={markers.length}
+							rowsPerPage={rowsPerPage}
+							page={page}
+							onPageChange={handleChangePage}
+							onRowsPerPageChange={handleChangeRowsPerPage}
+						/>
+					</Grid>
+				</Grid>
 			</Paper>
 		</Box>
 	);

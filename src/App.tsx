@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Map from "./components/Map";
-import MarkerCard from "./components/MarkerCard";
+import MarkerTable from "./components/MarkerTable";
 import Header from "./components/Header";
 import { getCityFromCoords } from "./utils/geo";
 import "./styles/App.css";
@@ -78,7 +78,7 @@ function App() {
 		<>
 			<Header onMarkerClick={() => setShowMarkers(!showMarkers)} />
 			{showMarkers && (
-				<MarkerCard
+				<MarkerTable
 					loading={loading}
 					markers={markers}
 					userLocation={userLocation}

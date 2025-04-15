@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, CardHeader, Divider } from "@mui/material";
+import { Card, CardContent, CardHeader } from "@mui/material";
 import MarkerTable from "./MarkerTable"; // Import the new MarkerTable component
 
 export type MarkerData = {
@@ -13,7 +13,7 @@ type MarkerCardProps = {
 	userLocation: [number, number];
 	onPanToMarker: (coords: [number, number]) => void;
 	createNewMarker: (coords: [number, number]) => void;
-  onDeleteMarkers: (ids: number[]) => void;
+	onDeleteMarkers: (ids: number[]) => void;
 };
 
 const MarkerCard = ({
@@ -22,14 +22,14 @@ const MarkerCard = ({
 	userLocation,
 	onPanToMarker,
 	createNewMarker,
-  onDeleteMarkers
+	onDeleteMarkers
 }: MarkerCardProps) => (
 	<Card
 		sx={{
-			maxWidth: "100%",
+			maxWidth: "768px",
+			width: "100%",
 			position: "absolute",
 			top: 64,
-			left: 0,
 			right: 0,
 			m: 2,
 			p: 1,
@@ -40,19 +40,12 @@ const MarkerCard = ({
 		<CardContent>
 			<MarkerTable
 				markers={markers}
+				loading={loading}
+				userLocation={userLocation}
 				onPanToMarker={onPanToMarker}
+				createNewMarker={createNewMarker}
 				onDeleteMarkers={onDeleteMarkers}
 			/>
-			{/* Use MarkerTable here */}
-			<Divider sx={{ my: 2 }} />
-			<Button
-				fullWidth
-				variant="contained"
-				disabled={loading}
-				onClick={() => createNewMarker(userLocation)}
-			>
-				Add Current Location
-			</Button>
 		</CardContent>
 	</Card>
 );
