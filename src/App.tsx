@@ -69,7 +69,7 @@ function App() {
 		};
 
 		setTimeout(() => {
-			setMarkers((prev) => [...prev, newMarker]);
+			setMarkers((prev) => [newMarker, ...prev ]);
 			setLoading(false);
 		}, 2000);
 	};
