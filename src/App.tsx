@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import Map from "./components/Map";
-import MarkerTable from "./components/MarkerTable";
 import Header from "./components/Header";
+import MarkerTable from "./components/MarkerTable";
+import AccountCard from "./components/AccountCard";
 import { getCityFromCoords } from "./utils/geo";
 import "./styles/App.css";
 
@@ -20,6 +21,7 @@ function App() {
 	const [zoomLevel, setZoomLevel] = useState(7);
 	const [markers, setMarkers] = useState<MarkerData[]>([]);
 	const [showMarkers, setShowMarkers] = useState(false);
+	const [showAccount, setShowAccounts] = useState(false);
 
 	useEffect(() => {
 		const getMarkers = () => {
@@ -74,9 +76,27 @@ function App() {
 		}, 2000);
 	};
 
+	const handleMarkersButtonClick = () => {
+		// toggle markers card open/close
+		setShowMarkers(!showMarkers)
+		// if account card is open, then close
+		if(showAccount) {
+			setShowAccounts(false)
+		}
+	}
+
+	const handleAccountButtonClick = () => {
+		// toggle account card open/close
+		setShowAccounts(!showAccount)
+		// if markers card is open, then close
+		if(showMarkers) {
+			setShowMarkers(false)
+		}
+	}
+
 	return (
 		<>
-			<Header onMarkerClick={() => setShowMarkers(!showMarkers)} />
+			<Header onMarkerClick={handleMarkersButtonClick} onAccountButtonClick={handleAccountButtonClick} />
 			{showMarkers && (
 				<MarkerTable
 					loading={loading}
@@ -86,6 +106,9 @@ function App() {
 					createNewMarker={createNewMarker}
 					onDeleteMarkers={handleDeleteMarkers}
 				/>
+			)}
+			{showAccount && (
+				<AccountCard loading={loading}/>
 			)}
 			<Map center={coordinates} zoom={zoomLevel} markers={markers} />
 		</>
