@@ -144,7 +144,7 @@ function EnhancedTableToolbar(props: {
 			) : (
 				<Typography
 					sx={{ flex: "1 1 100%" }}
-					variant="h6"
+					variant="h5"
 					id="tableTitle"
 				>
 					Your Markers
