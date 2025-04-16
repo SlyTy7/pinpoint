@@ -1,9 +1,4 @@
-import {
-	useState,
-	useMemo,
-	MouseEvent,
-	ChangeEvent,
-} from "react";
+import { useState, useMemo, MouseEvent, ChangeEvent } from "react";
 import {
 	alpha,
 	Box,
@@ -74,7 +69,6 @@ function getComparator<Key extends keyof any>(
 }
 
 function EnhancedTableHead(props: {
-	onSelectAllClick: (event: ChangeEvent<HTMLInputElement>) => void;
 	order: Order;
 	orderBy: string;
 	numSelected: number;
@@ -85,11 +79,8 @@ function EnhancedTableHead(props: {
 	) => void;
 }) {
 	const {
-		onSelectAllClick,
 		order,
 		orderBy,
-		numSelected,
-		rowCount,
 		onRequestSort,
 	} = props;
 	const createSortHandler =
@@ -101,18 +92,14 @@ function EnhancedTableHead(props: {
 		<TableHead>
 			<TableRow>
 				<TableCell padding="checkbox">
-					<Checkbox
-						color="primary"
-						indeterminate={numSelected > 0 && numSelected < rowCount}
-						checked={rowCount > 0 && numSelected === rowCount}
-						onChange={onSelectAllClick}
-						inputProps={{ "aria-label": "select all markers" }}
-					/>
+
 				</TableCell>
 				{headCells.map((headCell, index) => (
 					<TableCell
 						key={headCell.id}
-						align={index === headCells.length - 1 ? "right" : "left"}
+						align={
+							index === headCells.length - 1 ? "right" : "left"
+						}
 						sortDirection={orderBy === headCell.id ? order : false}
 					>
 						<TableSortLabel
@@ -123,7 +110,9 @@ function EnhancedTableHead(props: {
 							{headCell.label}
 							{orderBy === headCell.id ? (
 								<Box component="span" sx={visuallyHidden}>
-									{order === "desc" ? "sorted descending" : "sorted ascending"}
+									{order === "desc"
+										? "sorted descending"
+										: "sorted ascending"}
 								</Box>
 							) : null}
 						</TableSortLabel>
@@ -151,11 +140,19 @@ function EnhancedTableToolbar(props: {
 			}}
 		>
 			{numSelected > 0 ? (
-				<Typography sx={{ flex: "1 1 100%" }} color="inherit" variant="subtitle1">
+				<Typography
+					sx={{ flex: "1 1 100%" }}
+					color="inherit"
+					variant="subtitle1"
+				>
 					{numSelected} selected
 				</Typography>
 			) : (
-				<Typography sx={{ flex: "1 1 100%" }} variant="h6" id="tableTitle">
+				<Typography
+					sx={{ flex: "1 1 100%" }}
+					variant="h6"
+					id="tableTitle"
+				>
 					Your Markers
 				</Typography>
 			)}
@@ -171,7 +168,7 @@ function EnhancedTableToolbar(props: {
 	);
 }
 
-export default function MarkerTable({
+function MarkerTable({
 	markers,
 	loading,
 	userLocation,
@@ -192,15 +189,6 @@ export default function MarkerTable({
 		const isAsc = orderBy === property && order === "asc";
 		setOrder(isAsc ? "desc" : "asc");
 		setOrderBy(property);
-	};
-
-	const handleSelectAllClick = (event: ChangeEvent<HTMLInputElement>) => {
-		if (event.target.checked) {
-			const newSelected = markers.map((n) => n.id);
-			setSelected(newSelected);
-			return;
-		}
-		setSelected([]);
 	};
 
 	const handleClick = (
@@ -268,7 +256,6 @@ export default function MarkerTable({
 					<Table aria-labelledby="tableTitle" size="medium">
 						<EnhancedTableHead
 							numSelected={selected.length}
-							onSelectAllClick={handleSelectAllClick}
 							order={order}
 							orderBy={orderBy}
 							onRequestSort={handleRequestSort}
@@ -281,7 +268,11 @@ export default function MarkerTable({
 									<TableRow
 										hover
 										onClick={(event) =>
-											handleClick(event, row.id, row.coords)
+											handleClick(
+												event,
+												row.id,
+												row.coords
+											)
 										}
 										role="checkbox"
 										aria-checked={isItemSelected}
@@ -290,8 +281,38 @@ export default function MarkerTable({
 										selected={isItemSelected}
 										sx={{ cursor: "pointer" }}
 									>
-										<TableCell padding="checkbox">
-											<Checkbox color="primary" checked={isItemSelected} />
+										<TableCell
+											padding="checkbox"
+											onClick={(e) => e.stopPropagation()}
+										>
+											<Checkbox
+												color="primary"
+												checked={isItemSelected}
+												onChange={() => {
+													const selectedIndex =
+														selected.indexOf(
+															row.id
+														);
+													let newSelected: number[] =
+														[];
+
+													if (selectedIndex === -1) {
+														newSelected = [
+															...selected,
+															row.id,
+														];
+													} else {
+														newSelected =
+															selected.filter(
+																(item) =>
+																	item !==
+																	row.id
+															);
+													}
+
+													setSelected(newSelected);
+												}}
+											/>
 										</TableCell>
 										<TableCell>{row.name}</TableCell>
 										<TableCell sx={{ textAlign: "right" }}>
@@ -303,7 +324,9 @@ export default function MarkerTable({
 							{visibleRows.length < rowsPerPage && (
 								<TableRow
 									style={{
-										height: 53 * (rowsPerPage - visibleRows.length),
+										height:
+											53 *
+											(rowsPerPage - visibleRows.length),
 									}}
 								>
 									<TableCell colSpan={4} />
@@ -345,3 +368,6 @@ export default function MarkerTable({
 		</Box>
 	);
 }
+
+
+export default MarkerTable;
