@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Map from "./components/Map";
 import Header from "./components/Header";
-import MarkerTable from "./components/MarkerTable";
+import MarkerCard from "./components/MarkerCard";
 import AccountCard from "./components/AccountCard";
 import { getCityFromCoords } from "./utils/geo";
 import "./styles/App.css";
@@ -98,7 +98,7 @@ function App() {
 		<>
 			<Header onMarkerClick={handleMarkersButtonClick} onAccountButtonClick={handleAccountButtonClick} />
 			{showMarkers && (
-				<MarkerTable
+				<MarkerCard
 					loading={loading}
 					markers={markers}
 					userLocation={userLocation}

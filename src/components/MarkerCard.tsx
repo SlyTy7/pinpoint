@@ -21,7 +21,12 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { visuallyHidden } from "@mui/utils";
-import { MarkerData } from "./MarkerCard";
+
+type MarkerData = {
+	id: number;
+	coords: [number, number];
+	name: string;
+};
 
 type Order = "asc" | "desc";
 
@@ -162,7 +167,7 @@ function EnhancedTableToolbar(props: {
 	);
 }
 
-function MarkerTable({
+function MarkerCard({
 	markers,
 	loading,
 	userLocation,
@@ -363,4 +368,4 @@ function MarkerTable({
 	);
 }
 
-export default MarkerTable;
+export default MarkerCard;
