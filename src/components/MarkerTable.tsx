@@ -78,11 +78,7 @@ function EnhancedTableHead(props: {
 		property: keyof MarkerData | "coords"
 	) => void;
 }) {
-	const {
-		order,
-		orderBy,
-		onRequestSort,
-	} = props;
+	const { order, orderBy, onRequestSort } = props;
 	const createSortHandler =
 		(property: keyof MarkerData | "coords") =>
 		(event: MouseEvent<unknown>) =>
@@ -91,9 +87,7 @@ function EnhancedTableHead(props: {
 	return (
 		<TableHead>
 			<TableRow>
-				<TableCell padding="checkbox">
-
-				</TableCell>
+				<TableCell padding="checkbox"></TableCell>
 				{headCells.map((headCell, index) => (
 					<TableCell
 						key={headCell.id}
@@ -368,6 +362,5 @@ function MarkerTable({
 		</Box>
 	);
 }
-
 
 export default MarkerTable;
