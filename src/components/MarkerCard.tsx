@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader } from "@mui/material";
-import MarkerTable from "./MarkerTable"; // Import the new MarkerTable component
+import MarkerTable from "./MarkerTable";
 
 export type MarkerData = {
 	id: number;
