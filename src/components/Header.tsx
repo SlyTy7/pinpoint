@@ -4,7 +4,7 @@ import {
 	Typography,
 	Button,
 } from "@mui/material";
-import PushPinIcon from "@mui/icons-material/PushPin";
+import PushPinIcon from "@mui/icons-material/PushPinOutlined";
 
 type HeaderProps = {
 	isLoggedIn: boolean;
@@ -23,7 +23,7 @@ const Header = ({
 }: HeaderProps) => (
 	<AppBar elevation={2} position="static">
 		<Toolbar>
-			<PushPinIcon />
+			<PushPinIcon color="primary" />
 			<Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
 				Pinpoint
 			</Typography>
