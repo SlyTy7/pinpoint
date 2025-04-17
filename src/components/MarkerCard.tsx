@@ -23,7 +23,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { visuallyHidden } from "@mui/utils";
 
 type MarkerData = {
-	id: number;
+	id: string;
 	coords: [number, number];
 	name: string;
 };
@@ -35,7 +35,7 @@ type MarkerTableProps = {
 	isLoading: boolean;
 	userLocation: [number, number];
 	onPanToMarker: (coords: [number, number]) => void;
-	onDeleteMarkers: (ids: number[]) => void;
+	onDeleteMarkers: (ids: string[]) => void;
 	createNewMarker: (coords: [number, number]) => void;
 };
 
@@ -56,12 +56,19 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T | "coords") {
 		const bCoord = (b as any).coords.join(", ");
 		return bCoord.localeCompare(aCoord);
 	}
-	if (orderBy === "id") {
-		return (a[orderBy] as number) - (b[orderBy] as number);
+
+	const aValue = a[orderBy];
+	const bValue = b[orderBy];
+
+	if (typeof aValue === "number" && typeof bValue === "number") {
+		return bValue - aValue;
 	}
-	return (b[orderBy] as any)
-		.toString()
-		.localeCompare((a[orderBy] as any).toString());
+
+	if (typeof aValue === "string" && typeof bValue === "string") {
+		return bValue.localeCompare(aValue);
+	}
+
+	return 0; // fallback if types don't match or are unsupported
 }
 
 function getComparator<Key extends keyof any>(
@@ -177,7 +184,7 @@ function MarkerCard({
 }: MarkerTableProps) {
 	const [order, setOrder] = useState<Order>("asc");
 	const [orderBy, setOrderBy] = useState<keyof MarkerData | "coords">("id");
-	const [selected, setSelected] = useState<number[]>([]);
+	const [selected, setSelected] = useState<string[]>([]);
 	const [page, setPage] = useState(0);
 	const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -192,12 +199,12 @@ function MarkerCard({
 
 	const handleClick = (
 		_event: MouseEvent<unknown>,
-		id: number,
+		id: string,
 		coords: [number, number]
 	) => {
 		onPanToMarker(coords);
 		const selectedIndex = selected.indexOf(id);
-		let newSelected: number[] = [];
+		let newSelected: string[] = [];
 
 		if (selectedIndex === -1) {
 			newSelected = [...selected, id];
@@ -232,7 +239,7 @@ function MarkerCard({
 		page * rowsPerPage + rowsPerPage
 	);
 
-	const isSelected = (id: number) => selected.indexOf(id) !== -1;
+	const isSelected = (id: string) => selected.includes(id);
 
 	return (
 		<Box
@@ -292,7 +299,7 @@ function MarkerCard({
 														selected.indexOf(
 															row.id
 														);
-													let newSelected: number[] =
+													let newSelected: string[] =
 														[];
 
 													if (selectedIndex === -1) {

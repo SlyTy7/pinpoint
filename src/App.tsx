@@ -2,7 +2,14 @@ import "./styles/App.css";
 
 import { useEffect, useState, useCallback } from "react";
 import { getCityFromCoords } from "./utils/geo";
-import { auth } from "./firebase/init";
+import {
+	collection,
+	addDoc,
+	getDocs,
+	deleteDoc,
+	doc,
+} from "firebase/firestore";
+import { auth, db } from "./firebase/init";
 import {
 	onAuthStateChanged,
 	signInWithPopup,
@@ -15,24 +22,10 @@ import Header from "./components/Header";
 import MarkerCard from "./components/MarkerCard";
 
 export type MarkerData = {
-	id: number;
+	id: string;
 	coords: [number, number];
 	name: string;
 };
-
-// TODO: remove and get this from a database via API
-const STATIC_MARKERS: MarkerData[] = [
-	{ id: 1744859592001, coords: [37.9101, -122.0652], name: "Walnut Creek" },
-	{ id: 1744859592002, coords: [37.3387, -121.8853], name: "San Jose" },
-	{ id: 1744859592003, coords: [37.8044, -122.2712], name: "Oakland" },
-	{ id: 1744859592004, coords: [34.0522, -118.2437], name: "Los Angeles" },
-	{ id: 1744859592005, coords: [40.7128, -74.006], name: "New York City" },
-	{ id: 1744859592006, coords: [41.8781, -87.6298], name: "Chicago" },
-	{ id: 1744859592007, coords: [29.7604, -95.3698], name: "Houston" },
-	{ id: 1744859592008, coords: [39.7392, -104.9903], name: "Denver" },
-	{ id: 1744859592009, coords: [25.7617, -80.1918], name: "Miami" },
-	{ id: 1744859592010, coords: [47.6062, -122.3321], name: "Seattle" },
-];
 
 function App() {
 	const [coordinates, setCoordinates] = useState<[number, number]>([
@@ -60,15 +53,34 @@ function App() {
 			}
 		);
 
-		const unsubscribe = onAuthStateChanged(auth, (user) => {
+		const unsubscribe = onAuthStateChanged(auth, async (user) => {
 			setIsLoggedIn(!!user);
+
+			if (user) {
+				const snapshot = await getDocs(
+					collection(db, "users", user.uid, "markers")
+				);
+				const userMarkers = snapshot.docs.map((doc) => ({
+					id: doc.id,
+					...(doc.data() as Omit<MarkerData, "id">),
+				}));
+				setMarkers(userMarkers);
+			}
 		});
 
-		return () => unsubscribe(); // clean up listener on unmount
+		return () => unsubscribe();
 	}, []);
 
-	const handleDeleteMarkers = (ids: number[]) => {
+	const handleDeleteMarkers = async (ids: string[]) => {
+		const user = auth.currentUser;
+		if (!user) return;
+
 		setMarkers((prev) => prev.filter((marker) => !ids.includes(marker.id)));
+
+		for (const id of ids) {
+			const markerRef = doc(db, "users", user.uid, "markers", id);
+			await deleteDoc(markerRef);
+		}
 	};
 
 	const handlePanToMarker = useCallback((coords: [number, number]) => {
@@ -90,7 +102,7 @@ function App() {
 			if (provider) {
 				await signInWithPopup(auth, provider);
 				setIsLoggedIn(true);
-				setMarkers(STATIC_MARKERS);
+				// setMarkers(STATIC_MARKERS);
 			}
 
 			setIsLoading(false);
@@ -121,16 +133,27 @@ function App() {
 	const createNewMarker = async (coords: [number, number]) => {
 		setIsLoading(true);
 		const cityName = await getCityFromCoords(coords[0], coords[1]);
+
+		const user = auth.currentUser;
+		if (!user) return;
+
+		const markerData = {
+			coords,
+			name: cityName,
+			timestamp: Date.now(), // optional
+		};
+
+		const userMarkersRef = collection(db, "users", user.uid, "markers");
+		const docRef = await addDoc(userMarkersRef, markerData); // Firestore doc ID is here
+
 		const newMarker: MarkerData = {
-			id: Date.now(),
+			id: docRef.id, // use Firestore doc ID
 			coords,
 			name: cityName,
 		};
 
-		setTimeout(() => {
-			setMarkers((prev) => [newMarker, ...prev]);
-			setIsLoading(false);
-		}, 2000);
+		setMarkers((prev) => [newMarker, ...prev]);
+		setIsLoading(false);
 	};
 
 	const toggleCard = (card: "markers" | "account") => {

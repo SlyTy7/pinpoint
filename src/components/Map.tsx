@@ -3,7 +3,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 type MarkerData = {
-  id: number;
+  id: string;
   coords: [number, number];
   name: string;
 };
