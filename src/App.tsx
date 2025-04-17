@@ -5,6 +5,7 @@ import MarkerCard from "./components/MarkerCard";
 import AccountCard from "./components/AccountCard";
 import { getCityFromCoords } from "./utils/geo";
 import "./styles/App.css";
+import { auth } from "./firebase/init"
 
 export type MarkerData = {
 	id: number;
@@ -20,8 +21,9 @@ function App() {
 	const [loading, setLoading] = useState(false);
 	const [zoomLevel, setZoomLevel] = useState(7);
 	const [markers, setMarkers] = useState<MarkerData[]>([]);
-	const [showMarkers, setShowMarkers] = useState(false);
-	const [showAccount, setShowAccounts] = useState(false);
+	const [loggedIn, setLoggedInStatus] = useState(false)
+	const [showMarkerCard, setShowMarkerCard] = useState(false);
+	const [showAccountCard, setShowAccountCard] = useState(false);
 
 	useEffect(() => {
 		const getMarkers = () => {
@@ -58,7 +60,7 @@ function App() {
 	const handlePanToMarker = (coords: [number, number]) => {
 		setCoordinates(coords);
 		setZoomLevel(10);
-		setShowMarkers(false);
+		setShowMarkerCard(false);
 	};
 
 	const createNewMarker = async (coords: [number, number]) => {
@@ -78,26 +80,26 @@ function App() {
 
 	const handleMarkersButtonClick = () => {
 		// toggle markers card open/close
-		setShowMarkers(!showMarkers)
+		setShowMarkerCard(!showMarkerCard)
 		// if account card is open, then close
-		if(showAccount) {
-			setShowAccounts(false)
+		if(showAccountCard) {
+			setShowAccountCard(false)
 		}
 	}
 
 	const handleAccountButtonClick = () => {
 		// toggle account card open/close
-		setShowAccounts(!showAccount)
+		setShowAccountCard(!showAccountCard)
 		// if markers card is open, then close
-		if(showMarkers) {
-			setShowMarkers(false)
+		if(showMarkerCard) {
+			setShowMarkerCard(false)
 		}
 	}
 
 	return (
 		<>
 			<Header onMarkerClick={handleMarkersButtonClick} onAccountButtonClick={handleAccountButtonClick} />
-			{showMarkers && (
+			{showMarkerCard && (
 				<MarkerCard
 					loading={loading}
 					markers={markers}
@@ -107,8 +109,8 @@ function App() {
 					onDeleteMarkers={handleDeleteMarkers}
 				/>
 			)}
-			{showAccount && (
-				<AccountCard loading={loading}/>
+			{showAccountCard && (
+				<AccountCard loggedIn={loggedIn} loading={loading}/>
 			)}
 			<Map center={coordinates} zoom={zoomLevel} markers={markers} />
 		</>
