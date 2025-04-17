@@ -1,6 +1,6 @@
 import "./styles/App.css";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { getCityFromCoords } from "./utils/geo";
 import { auth } from "./firebase/init"
 
@@ -15,6 +15,21 @@ export type MarkerData = {
 	name: string;
 };
 
+// TODO: remove and get this from a database via API
+const STATIC_MARKERS: MarkerData[] = [ 
+	{ id: 1, coords: [37.9101, -122.0652], name: "Walnut Creek" },
+	{ id: 2, coords: [37.3387, -121.8853], name: "San Jose" },
+	{ id: 3, coords: [37.8044, -122.2712], name: "Oakland" },
+	{ id: 4, coords: [34.0522, -118.2437], name: "Los Angeles" },
+	{ id: 5, coords: [40.7128, -74.006], name: "New York City" },
+	{ id: 6, coords: [41.8781, -87.6298], name: "Chicago" },
+	{ id: 7, coords: [29.7604, -95.3698], name: "Houston" },
+	{ id: 8, coords: [39.7392, -104.9903], name: "Denver" },
+	{ id: 9, coords: [25.7617, -80.1918], name: "Miami" },
+	{ id: 10, coords: [47.6062, -122.3321], name: "Seattle" },
+];
+
+
 function App() {
 	const [coordinates, setCoordinates] = useState<[number, number]>([
 		37.7749, -122.4194,
@@ -28,23 +43,8 @@ function App() {
 	const [showAccountCard, setShowAccountCard] = useState(false);
 
 	useEffect(() => {
-		const getMarkers = () => {
-			const activeMarkers: MarkerData[] = [
-				{ id: 1, coords: [37.9101, -122.0652], name: "Walnut Creek" },
-				{ id: 2, coords: [37.3387, -121.8853], name: "San Jose" },
-				{ id: 3, coords: [37.8044, -122.2712], name: "Oakland" },
-				{ id: 4, coords: [34.0522, -118.2437], name: "Los Angeles" },
-				{ id: 5, coords: [40.7128, -74.006], name: "New York City" },
-				{ id: 6, coords: [41.8781, -87.6298], name: "Chicago" },
-				{ id: 7, coords: [29.7604, -95.3698], name: "Houston" },
-				{ id: 8, coords: [39.7392, -104.9903], name: "Denver" },
-				{ id: 9, coords: [25.7617, -80.1918], name: "Miami" },
-				{ id: 10, coords: [47.6062, -122.3321], name: "Seattle" },
-			];
-			setMarkers(activeMarkers);
-		};
-
-		getMarkers();
+		// TODO: remove and get this from a database via API
+		setMarkers(STATIC_MARKERS)
 
 		navigator.geolocation.getCurrentPosition((position) => {
 			const { latitude, longitude } = position.coords;
@@ -59,11 +59,12 @@ function App() {
 		setMarkers((prev) => prev.filter((marker) => !ids.includes(marker.id)));
 	};
 
-	const handlePanToMarker = (coords: [number, number]) => {
+	const handlePanToMarker = useCallback((coords: [number, number]) => {
 		setCoordinates(coords);
 		setZoomLevel(10);
 		setShowMarkerCard(false);
-	};
+	}, []);
+	
 
 	const createNewMarker = async (coords: [number, number]) => {
 		setLoading(true);
