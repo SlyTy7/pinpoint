@@ -93,16 +93,16 @@ function App() {
 		try {
 			setIsLoading(true);
 
+			let type = providerType.toLowerCase();
 			let provider;
 
-			if (providerType === "Google") {
+			if (type === "google") {
 				provider = new GoogleAuthProvider();
 			}
 
 			if (provider) {
 				await signInWithPopup(auth, provider);
 				setIsLoggedIn(true);
-				// setMarkers(STATIC_MARKERS);
 			}
 
 			setIsLoading(false);
