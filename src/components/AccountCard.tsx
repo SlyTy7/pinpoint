@@ -31,7 +31,7 @@ const AccountCard = ({ isLoading, isLoggedIn, onLogin, onLogout }: AccountCardPr
 					</Button>
 				) : (
 					<Button variant="contained" onClick={() => onLogin("Google")} disabled={isLoading}>
-						Log In with Google
+						Log In
 					</Button>
 				)}
 			</Box>

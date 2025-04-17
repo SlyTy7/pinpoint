@@ -144,6 +144,7 @@ function App() {
 	return (
 		<>
 			<Header
+				isLoggedIn={isLoggedIn}
 				onMarkerClick={() => toggleCard("markers")}
 				onAccountButtonClick={() => toggleCard("account")}
 			/>
