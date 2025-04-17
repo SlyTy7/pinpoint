@@ -32,7 +32,7 @@ type Order = "asc" | "desc";
 
 type MarkerTableProps = {
 	markers: MarkerData[];
-	loading: boolean;
+	isLoading: boolean;
 	userLocation: [number, number];
 	onPanToMarker: (coords: [number, number]) => void;
 	onDeleteMarkers: (ids: number[]) => void;
@@ -169,7 +169,7 @@ function EnhancedTableToolbar(props: {
 
 function MarkerCard({
 	markers,
-	loading,
+	isLoading,
 	userLocation,
 	onPanToMarker,
 	onDeleteMarkers,
@@ -345,7 +345,7 @@ function MarkerCard({
 					<Grid size={6}>
 						<Button
 							variant="contained"
-							disabled={loading}
+							disabled={isLoading}
 							onClick={() => createNewMarker(userLocation)}
 						>
 							Add Current Location

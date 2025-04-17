@@ -1,10 +1,11 @@
 import { Paper, Typography, Box } from "@mui/material";
 
 type AccountCardProps = {
-	loading: boolean;
+	isLoading: boolean;
+	isLoggedIn: boolean;
 };
 
-const AccountCard = ({ loading }: AccountCardProps) => (
+const AccountCard = ({ isLoading, isLoggedIn }: AccountCardProps) => (
 	<Box
 		sx={{
 			maxWidth: "600px",
@@ -18,11 +19,11 @@ const AccountCard = ({ loading }: AccountCardProps) => (
 	>
 		<Paper sx={{ width: "100%", p: 2 }}>
 			<Typography
-				sx={{ flex: "1 1 100%" }}
+				sx={{ flex: "1 1 100%", p: 2 }}
 				variant="h5"
 				id="tableTitle"
 			>
-				Your Account
+				{isLoggedIn ? "Your Account" : "Log In"}
 			</Typography>
 		</Paper>
 	</Box>

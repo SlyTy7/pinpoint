@@ -35,7 +35,7 @@ function App() {
 		37.7749, -122.4194,
 	]);
 	const [userLocation, setUserLocation] = useState<[number, number]>([0, 0]);
-	const [loading, setLoading] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
 	const [zoomLevel, setZoomLevel] = useState(7);
 	const [markers, setMarkers] = useState<MarkerData[]>([]);
 	const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -70,7 +70,7 @@ function App() {
 	
 
 	const createNewMarker = async (coords: [number, number]) => {
-		setLoading(true);
+		setIsLoading(true);
 		const cityName = await getCityFromCoords(coords[0], coords[1]);
 		const newMarker: MarkerData = {
 			id: markers.length + 1,
@@ -80,18 +80,18 @@ function App() {
 
 		setTimeout(() => {
 			setMarkers((prev) => [newMarker, ...prev ]);
-			setLoading(false);
+			setIsLoading(false);
 		}, 2000);
 	};
 
 	const toggleCard = (card: "markers" | "account") => {
 		if (card === "markers") {
-			setShowMarkerCard(prev => !prev);
+			setShowMarkerCard(!showMarkerCard);
 			if (showAccountCard) setShowAccountCard(false);
 		} 
 		
 		if (card === "account") {
-			setShowAccountCard(prev => !prev);
+			setShowAccountCard(!showMarkerCard);
 			if (showAccountCard) setShowMarkerCard(false);
 		}
 	};
@@ -101,7 +101,7 @@ function App() {
 			<Header onMarkerClick={() => toggleCard("markers")} onAccountButtonClick={() => toggleCard("account")} />
 			{showMarkerCard && (
 				<MarkerCard
-					loading={loading}
+					isLoading={isLoading}
 					markers={markers}
 					userLocation={userLocation}
 					onPanToMarker={handlePanToMarker}
@@ -110,7 +110,7 @@ function App() {
 				/>
 			)}
 			{showAccountCard && (
-				<AccountCard isLoggedIn={isLoggedIn} loading={loading}/>
+				<AccountCard isLoggedIn={isLoggedIn} isLoading={isLoading}/>
 			)}
 			<Map center={coordinates} zoom={zoomLevel} markers={markers} />
 		</>
