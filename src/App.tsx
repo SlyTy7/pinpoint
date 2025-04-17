@@ -48,9 +48,6 @@ function App() {
 	const [showAccountCard, setShowAccountCard] = useState(false);
 
 	useEffect(() => {
-		// TODO: remove and get this from a database via API
-		setMarkers(STATIC_MARKERS);
-
 		navigator.geolocation.getCurrentPosition(
 			(position) => {
 				const { latitude, longitude } = position.coords;
@@ -90,17 +87,11 @@ function App() {
 			}
 
 			if (provider) {
-				const signInResponse = await signInWithPopup(auth, provider);
-
-
-				console.log(signInResponse);
-
+				await signInWithPopup(auth, provider);
 				setIsLoggedIn(true);
-
-				console.log(auth);
-
-				return signInResponse;
+				setMarkers(STATIC_MARKERS);
 			}
+
 		} catch (error) {
 			console.error("Login failed:", error);
 		}
@@ -108,7 +99,11 @@ function App() {
 
 	const handleLogout = async () => {
 		try {
+			// sign out of google account auth
 			await signOut(auth);
+
+			// reset markers on logging out
+			setMarkers([])
 		} catch (error) {
 			console.error("Logout failed:", error);
 		}
@@ -146,7 +141,8 @@ function App() {
 			<Header
 				isLoggedIn={isLoggedIn}
 				onMarkerClick={() => toggleCard("markers")}
-				onAccountButtonClick={() => toggleCard("account")}
+				onLoginClick={() => handleLogin("Google")}
+				onLogoutClick={handleLogout}
 			/>
 			{showMarkerCard && (
 				<MarkerCard
@@ -156,14 +152,6 @@ function App() {
 					onPanToMarker={handlePanToMarker}
 					createNewMarker={createNewMarker}
 					onDeleteMarkers={handleDeleteMarkers}
-				/>
-			)}
-			{showAccountCard && (
-				<AccountCard
-					isLoggedIn={isLoggedIn}
-					isLoading={isLoading}
-					onLogin={handleLogin}
-					onLogout={handleLogout}
 				/>
 			)}
 			<Map center={coordinates} zoom={zoomLevel} markers={markers} />

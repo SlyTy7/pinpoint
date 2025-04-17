@@ -4,15 +4,17 @@ import PushPinIcon from "@mui/icons-material/PushPin";
 type HeaderProps = {
 	isLoggedIn: boolean;
 	onMarkerClick: () => void;
-	onAccountButtonClick: () => void;
+	onLoginClick: () => void;
+	onLogoutClick: () => void;
 };
 
 const Header = ({
 	isLoggedIn,
 	onMarkerClick,
-	onAccountButtonClick,
+	onLoginClick,
+	onLogoutClick,
 }: HeaderProps) => (
-	<AppBar position="static">
+	<AppBar elevation={2} position="static">
 		<Toolbar>
 			<PushPinIcon />
 			<Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -28,11 +30,11 @@ const Header = ({
 				</Button>
 			)}
 			{isLoggedIn ? (
-				<Button variant="outlined" onClick={onAccountButtonClick}>
+				<Button variant="outlined" onClick={onLogoutClick}>
 					Sign Out
 				</Button>
 			) : (
-				<Button variant="outlined" onClick={onAccountButtonClick}>
+				<Button variant="outlined" onClick={onLoginClick}>
 					Sign In
 				</Button>
 			)}
