@@ -79,6 +79,8 @@ function App() {
 
 	const handleLogin = async (providerType: string) => {
 		try {
+			setIsLoading(true);
+
 			let provider;
 
 			if (providerType === "Google") {
@@ -91,6 +93,7 @@ function App() {
 				setMarkers(STATIC_MARKERS);
 			}
 
+			setIsLoading(false);
 		} catch (error) {
 			console.error("Login failed:", error);
 		}
@@ -98,15 +101,18 @@ function App() {
 
 	const handleLogout = async () => {
 		try {
+			setIsLoading(true);
 			// sign out of google account auth
 			await signOut(auth);
-
 			// reset markers on logging out
-			setMarkers([])
+			setMarkers([]);
 			// close open cards
 			if (showAccountCard) setShowAccountCard(false);
 			if (showMarkerCard) setShowMarkerCard(false);
-
+			// give a loading state of at least 3 seconds
+			setTimeout(() => {
+				setIsLoading(false);
+			}, 3000);
 		} catch (error) {
 			console.error("Logout failed:", error);
 		}
@@ -143,6 +149,7 @@ function App() {
 		<>
 			<Header
 				isLoggedIn={isLoggedIn}
+				isLoading={isLoading}
 				onMarkerClick={() => toggleCard("markers")}
 				onLoginClick={() => handleLogin("Google")}
 				onLogoutClick={handleLogout}

@@ -1,8 +1,14 @@
-import { AppBar, Toolbar, Typography, Button } from "@mui/material";
+import {
+	AppBar,
+	Toolbar,
+	Typography,
+	Button,
+} from "@mui/material";
 import PushPinIcon from "@mui/icons-material/PushPin";
 
 type HeaderProps = {
 	isLoggedIn: boolean;
+	isLoading: boolean;
 	onMarkerClick: () => void;
 	onLoginClick: () => void;
 	onLogoutClick: () => void;
@@ -10,6 +16,7 @@ type HeaderProps = {
 
 const Header = ({
 	isLoggedIn,
+	isLoading,
 	onMarkerClick,
 	onLoginClick,
 	onLogoutClick,
@@ -22,6 +29,7 @@ const Header = ({
 			</Typography>
 			{isLoggedIn && (
 				<Button
+					disabled={isLoading}
 					variant="contained"
 					sx={{ mr: 2 }}
 					onClick={onMarkerClick}
@@ -30,11 +38,19 @@ const Header = ({
 				</Button>
 			)}
 			{isLoggedIn ? (
-				<Button variant="outlined" onClick={onLogoutClick}>
+				<Button
+					disabled={isLoading}
+					variant="outlined"
+					onClick={onLogoutClick}
+				>
 					Sign Out
 				</Button>
 			) : (
-				<Button variant="outlined" onClick={onLoginClick}>
+				<Button
+					disabled={isLoading}
+					variant="outlined"
+					onClick={onLoginClick}
+				>
 					Sign In
 				</Button>
 			)}
