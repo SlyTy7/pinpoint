@@ -52,6 +52,9 @@ function App() {
 				parseFloat(latitude.toFixed(4)),
 				parseFloat(longitude.toFixed(4)),
 			]);
+		},
+		(error) => {
+			console.warn("Geolocation failed:", error);
 		});
 	}, []);
 
