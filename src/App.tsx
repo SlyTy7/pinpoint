@@ -80,27 +80,21 @@ function App() {
 		}, 2000);
 	};
 
-	const handleMarkersButtonClick = () => {
-		// toggle markers card open/close
-		setShowMarkerCard(!showMarkerCard)
-		// if account card is open, then close
-		if(showAccountCard) {
-			setShowAccountCard(false)
+	const toggleCard = (card: "markers" | "account") => {
+		if (card === "markers") {
+			setShowMarkerCard(prev => !prev);
+			if (showAccountCard) setShowAccountCard(false);
+		} 
+		
+		if (card === "account") {
+			setShowAccountCard(prev => !prev);
+			if (showAccountCard) setShowMarkerCard(false);
 		}
-	}
-
-	const handleAccountButtonClick = () => {
-		// toggle account card open/close
-		setShowAccountCard(!showAccountCard)
-		// if markers card is open, then close
-		if(showMarkerCard) {
-			setShowMarkerCard(false)
-		}
-	}
+	};
 
 	return (
 		<>
-			<Header onMarkerClick={handleMarkersButtonClick} onAccountButtonClick={handleAccountButtonClick} />
+			<Header onMarkerClick={() => toggleCard("markers")} onAccountButtonClick={() => toggleCard("account")} />
 			{showMarkerCard && (
 				<MarkerCard
 					loading={loading}
