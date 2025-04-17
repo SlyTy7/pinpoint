@@ -15,8 +15,8 @@
 - **Frontend:** React, TypeScript, Vite
 - **Mapping:** Leaflet.js
 - **State Management:** React Context or Redux (TBD)
-- **Authentication:** Firebase/Auth0 (TBD)
-- **Database:** Firestore, Supabase, or MongoDB (TBD)
+- **Authentication:** Firebase
+- **Database:** Firestore
 
 ## 📦 Installation
 
@@ -47,8 +47,8 @@ npm run dev  # or yarn dev
 
 ## 📌 Roadmap
 
-- [ ] Implement user authentication
-- [ ] Add the ability to edit and delete pins
+- [x] Implement user authentication
+- [x] Add the ability to edit and delete pins
 - [ ] Optimize database queries for better performance
 - [ ] Enhance UI/UX with animations and themes
 
