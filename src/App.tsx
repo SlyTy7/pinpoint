@@ -2,7 +2,13 @@ import "./styles/App.css";
 
 import { useEffect, useState, useCallback } from "react";
 import { getCityFromCoords } from "./utils/geo";
-import { auth } from "./firebase/init"
+import { auth } from "./firebase/init";
+import {
+	onAuthStateChanged,
+	signInWithPopup,
+	GoogleAuthProvider,
+	signOut,
+} from "firebase/auth";
 
 import Map from "./components/Map";
 import Header from "./components/Header";
@@ -16,7 +22,7 @@ export type MarkerData = {
 };
 
 // TODO: remove and get this from a database via API
-const STATIC_MARKERS: MarkerData[] = [ 
+const STATIC_MARKERS: MarkerData[] = [
 	{ id: 1, coords: [37.9101, -122.0652], name: "Walnut Creek" },
 	{ id: 2, coords: [37.3387, -121.8853], name: "San Jose" },
 	{ id: 3, coords: [37.8044, -122.2712], name: "Oakland" },
@@ -29,7 +35,6 @@ const STATIC_MARKERS: MarkerData[] = [
 	{ id: 10, coords: [47.6062, -122.3321], name: "Seattle" },
 ];
 
-
 function App() {
 	const [coordinates, setCoordinates] = useState<[number, number]>([
 		37.7749, -122.4194,
@@ -38,24 +43,32 @@ function App() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [zoomLevel, setZoomLevel] = useState(7);
 	const [markers, setMarkers] = useState<MarkerData[]>([]);
-	const [isLoggedIn, setIsLoggedIn] = useState(false)
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [showMarkerCard, setShowMarkerCard] = useState(false);
 	const [showAccountCard, setShowAccountCard] = useState(false);
 
 	useEffect(() => {
 		// TODO: remove and get this from a database via API
-		setMarkers(STATIC_MARKERS)
+		setMarkers(STATIC_MARKERS);
 
-		navigator.geolocation.getCurrentPosition((position) => {
-			const { latitude, longitude } = position.coords;
-			setUserLocation([
-				parseFloat(latitude.toFixed(4)),
-				parseFloat(longitude.toFixed(4)),
-			]);
-		},
-		(error) => {
-			console.warn("Geolocation failed:", error);
+		navigator.geolocation.getCurrentPosition(
+			(position) => {
+				const { latitude, longitude } = position.coords;
+				setUserLocation([
+					parseFloat(latitude.toFixed(4)),
+					parseFloat(longitude.toFixed(4)),
+				]);
+			},
+			(error) => {
+				console.warn("Geolocation failed:", error);
+			}
+		);
+
+		const unsubscribe = onAuthStateChanged(auth, (user) => {
+			setIsLoggedIn(!!user);
 		});
+
+		return () => unsubscribe(); // clean up listener on unmount
 	}, []);
 
 	const handleDeleteMarkers = (ids: number[]) => {
@@ -67,7 +80,39 @@ function App() {
 		setZoomLevel(10);
 		setShowMarkerCard(false);
 	}, []);
-	
+
+	const handleLogin = async (providerType: string) => {
+		try {
+			let provider;
+
+			if (providerType === "Google") {
+				provider = new GoogleAuthProvider();
+			}
+
+			if (provider) {
+				const signInResponse = await signInWithPopup(auth, provider);
+
+
+				console.log(signInResponse);
+
+				setIsLoggedIn(true);
+
+				console.log(auth);
+
+				return signInResponse;
+			}
+		} catch (error) {
+			console.error("Login failed:", error);
+		}
+	};
+
+	const handleLogout = async () => {
+		try {
+			await signOut(auth);
+		} catch (error) {
+			console.error("Logout failed:", error);
+		}
+	};
 
 	const createNewMarker = async (coords: [number, number]) => {
 		setIsLoading(true);
@@ -79,7 +124,7 @@ function App() {
 		};
 
 		setTimeout(() => {
-			setMarkers((prev) => [newMarker, ...prev ]);
+			setMarkers((prev) => [newMarker, ...prev]);
 			setIsLoading(false);
 		}, 2000);
 	};
@@ -88,8 +133,8 @@ function App() {
 		if (card === "markers") {
 			setShowMarkerCard(!showMarkerCard);
 			if (showAccountCard) setShowAccountCard(false);
-		} 
-		
+		}
+
 		if (card === "account") {
 			setShowAccountCard(!showAccountCard);
 			if (showMarkerCard) setShowMarkerCard(false);
@@ -98,7 +143,10 @@ function App() {
 
 	return (
 		<>
-			<Header onMarkerClick={() => toggleCard("markers")} onAccountButtonClick={() => toggleCard("account")} />
+			<Header
+				onMarkerClick={() => toggleCard("markers")}
+				onAccountButtonClick={() => toggleCard("account")}
+			/>
 			{showMarkerCard && (
 				<MarkerCard
 					isLoading={isLoading}
@@ -110,7 +158,12 @@ function App() {
 				/>
 			)}
 			{showAccountCard && (
-				<AccountCard isLoggedIn={isLoggedIn} isLoading={isLoading}/>
+				<AccountCard
+					isLoggedIn={isLoggedIn}
+					isLoading={isLoading}
+					onLogin={handleLogin}
+					onLogout={handleLogout}
+				/>
 			)}
 			<Map center={coordinates} zoom={zoomLevel} markers={markers} />
 		</>
