@@ -91,8 +91,8 @@ function App() {
 		} 
 		
 		if (card === "account") {
-			setShowAccountCard(!showMarkerCard);
-			if (showAccountCard) setShowMarkerCard(false);
+			setShowAccountCard(!showAccountCard);
+			if (showMarkerCard) setShowMarkerCard(false);
 		}
 	};
 
