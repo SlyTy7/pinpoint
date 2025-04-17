@@ -22,16 +22,16 @@ export type MarkerData = {
 
 // TODO: remove and get this from a database via API
 const STATIC_MARKERS: MarkerData[] = [
-	{ id: 1, coords: [37.9101, -122.0652], name: "Walnut Creek" },
-	{ id: 2, coords: [37.3387, -121.8853], name: "San Jose" },
-	{ id: 3, coords: [37.8044, -122.2712], name: "Oakland" },
-	{ id: 4, coords: [34.0522, -118.2437], name: "Los Angeles" },
-	{ id: 5, coords: [40.7128, -74.006], name: "New York City" },
-	{ id: 6, coords: [41.8781, -87.6298], name: "Chicago" },
-	{ id: 7, coords: [29.7604, -95.3698], name: "Houston" },
-	{ id: 8, coords: [39.7392, -104.9903], name: "Denver" },
-	{ id: 9, coords: [25.7617, -80.1918], name: "Miami" },
-	{ id: 10, coords: [47.6062, -122.3321], name: "Seattle" },
+	{ id: 1744859592001, coords: [37.9101, -122.0652], name: "Walnut Creek" },
+	{ id: 1744859592002, coords: [37.3387, -121.8853], name: "San Jose" },
+	{ id: 1744859592003, coords: [37.8044, -122.2712], name: "Oakland" },
+	{ id: 1744859592004, coords: [34.0522, -118.2437], name: "Los Angeles" },
+	{ id: 1744859592005, coords: [40.7128, -74.006], name: "New York City" },
+	{ id: 1744859592006, coords: [41.8781, -87.6298], name: "Chicago" },
+	{ id: 1744859592007, coords: [29.7604, -95.3698], name: "Houston" },
+	{ id: 1744859592008, coords: [39.7392, -104.9903], name: "Denver" },
+	{ id: 1744859592009, coords: [25.7617, -80.1918], name: "Miami" },
+	{ id: 1744859592010, coords: [47.6062, -122.3321], name: "Seattle" },
 ];
 
 function App() {
@@ -122,7 +122,7 @@ function App() {
 		setIsLoading(true);
 		const cityName = await getCityFromCoords(coords[0], coords[1]);
 		const newMarker: MarkerData = {
-			id: markers.length + 1,
+			id: Date.now(),
 			coords,
 			name: cityName,
 		};
