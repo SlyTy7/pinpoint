@@ -13,7 +13,6 @@ import {
 import Map from "./components/Map";
 import Header from "./components/Header";
 import MarkerCard from "./components/MarkerCard";
-import AccountCard from "./components/AccountCard";
 
 export type MarkerData = {
 	id: number;
