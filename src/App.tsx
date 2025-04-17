@@ -103,6 +103,10 @@ function App() {
 
 			// reset markers on logging out
 			setMarkers([])
+			// close open cards
+			if (showAccountCard) setShowAccountCard(false);
+			if (showMarkerCard) setShowMarkerCard(false);
+
 		} catch (error) {
 			console.error("Logout failed:", error);
 		}
