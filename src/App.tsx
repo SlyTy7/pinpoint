@@ -23,7 +23,7 @@ function App() {
 	const [loading, setLoading] = useState(false);
 	const [zoomLevel, setZoomLevel] = useState(7);
 	const [markers, setMarkers] = useState<MarkerData[]>([]);
-	const [loggedIn, setLoggedInStatus] = useState(false)
+	const [isLoggedIn, setIsLoggedIn] = useState(false)
 	const [showMarkerCard, setShowMarkerCard] = useState(false);
 	const [showAccountCard, setShowAccountCard] = useState(false);
 
@@ -106,7 +106,7 @@ function App() {
 				/>
 			)}
 			{showAccountCard && (
-				<AccountCard loggedIn={loggedIn} loading={loading}/>
+				<AccountCard isLoggedIn={isLoggedIn} loading={loading}/>
 			)}
 			<Map center={coordinates} zoom={zoomLevel} markers={markers} />
 		</>
