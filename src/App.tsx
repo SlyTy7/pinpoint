@@ -1,11 +1,13 @@
+import "./styles/App.css";
+
 import { useEffect, useState } from "react";
+import { getCityFromCoords } from "./utils/geo";
+import { auth } from "./firebase/init"
+
 import Map from "./components/Map";
 import Header from "./components/Header";
 import MarkerCard from "./components/MarkerCard";
 import AccountCard from "./components/AccountCard";
-import { getCityFromCoords } from "./utils/geo";
-import "./styles/App.css";
-import { auth } from "./firebase/init"
 
 export type MarkerData = {
 	id: number;
