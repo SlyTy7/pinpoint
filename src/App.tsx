@@ -140,14 +140,14 @@ function App() {
 		const markerData = {
 			coords,
 			name: cityName,
-			timestamp: Date.now(), // optional
+			timestamp: Date.now(),
 		};
 
 		const userMarkersRef = collection(db, "users", user.uid, "markers");
-		const docRef = await addDoc(userMarkersRef, markerData); // Firestore doc ID is here
+		const docRef = await addDoc(userMarkersRef, markerData);
 
 		const newMarker: MarkerData = {
-			id: docRef.id, // use Firestore doc ID
+			id: docRef.id,
 			coords,
 			name: cityName,
 		};
