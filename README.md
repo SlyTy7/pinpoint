@@ -14,7 +14,7 @@
 
 - **Frontend:** React, TypeScript, Vite
 - **Mapping:** Leaflet.js
-- **State Management:** React Context or Redux (TBD)
+- **Geocoding:** OpenCage
 - **Authentication:** Firebase
 - **Database:** Firestore
 
@@ -48,7 +48,10 @@ npm run dev  # or yarn dev
 ## 📌 Roadmap
 
 - [x] Implement user authentication
-- [x] Add the ability to edit and delete pins
+- [x] Google account user creation
+- [x] Add the ability to add and delete pins
+- [ ] Email/password user creation
+- [ ] Phone number user creation
 - [ ] Optimize database queries for better performance
 - [ ] Enhance UI/UX with animations and themes
 
