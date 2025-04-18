@@ -4,7 +4,7 @@ import copy from 'rollup-plugin-copy'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: "/",
+  base: "/pinpoint",
   plugins: [
     react(),
     copy({
