@@ -1,3 +1,4 @@
+<!-- portfolio-meta display_name: PinPoint -->
 # PinPoint 🧷
 
 **PinPoint** is a web app that allows users to log in, save their current location as a pin, and view their collection of pins on an interactive map. The app is built with **React**, **TypeScript**, and **Vite**, using the **Leaflet** library for map rendering.

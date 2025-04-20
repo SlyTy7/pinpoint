@@ -25,7 +25,7 @@ const Header = ({
 		<Toolbar>
 			<PushPinIcon color="primary" />
 			<Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-				Pinpoint
+				PinPoint
 			</Typography>
 			{isLoggedIn && (
 				<Button
